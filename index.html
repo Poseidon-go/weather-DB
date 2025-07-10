@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <!-- boxicon -->
+  <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css'
+    rel='stylesheet'>
+  <!-- font Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="shortcut icon" href="./src/assets/images/logo-weather.png"
+    type="image/x-icon">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+
+<body>
+  <div id="app">
+    <header>
+      <div class="logo pd-header">
+        <i class='bx bx-cloud-sun'></i>
+      </div>
+      <div class="search pd-header">
+        <i class='bx  bx-search-alt'></i>
+        <input id="data-city" type="text" placeholder="Ho Chi Minh">
+      </div>
+      <div class="darkMode pd-header">
+        <i class='bx bx-moon'></i>
+      </div>
+    </header>
+
+    <div id="Error-Show">
+
+    </div>
+
+    <div id="main">
+      <h3 class="Weather-title">Today OverView</h3>
+
+      <div class="Weather-screen">
+        <div class="weather-current">
+          <div id="weather-condition">
+            <i id="weather-icon" class='bx  bx-cloud-snow'></i>
+          </div>
+          <div id="weather-temp">
+            <p></p>
+          </div>
+          <div id="weather-description">
+            <p></p>
+          </div>
+          <div id="weather-location">
+            <i class='bx  bx-location'></i>
+            <p></p>
+          </div>
+          <div id="weather-country">
+            <i class='bx  bx-flag-alt-2'></i>
+            <p></p>
+          </div>
+          <div id="weather-days">
+            <i class='bx  bx-calendar-alt'></i>
+            <p></p>
+          </div>
+        </div>
+        <div id="weather-detail">
+          <div id="detail-wind" class="pd-card">
+            <img id="detail-wind__icon"
+              src="./src/assets/images/animate/wind-speed.svg" alt=""
+              width="48px" height="48px">
+            <div id="detail-wind__main" class="detail-style">
+              <p>Tốc Độ Gió</p>
+              <p></p>
+            </div>
+          </div>
+
+          <div id="detail-Humidity" class="pd-card">
+            <img id="detail-Humidity__icon"
+              src="./src/assets/images/animate/humidity.svg" alt="" width="48px"
+              height="48px">
+            <div id="detail-Humidity__main" class="detail-style">
+              <p>Độ ẩm</p>
+              <p></p>
+            </div>
+          </div>
+
+          <div id="detail-Pressure" class="pd-card">
+            <img id="detail-Pressure__icon"
+              src="./src/assets/images/animate/pressure.svg" alt="" width="48px"
+              height="48px">
+            <div id="detail-Pressure__main" class="detail-style">
+              <p>Áp suất khí quyển</p>
+              <p></p>
+            </div>
+          </div>
+
+          <div id="detail-Visibility" class="pd-card">
+            <img id="detail-Visibility__icon"
+              src="./src/assets/images/animate/visibility.svg" alt=""
+              width="48px" height="48px">
+            <div id="detail-Visibility__main" class="detail-style">
+              <p> Tầm nhìn xa</p>
+              <p></p>
+            </div>
+          </div>
+
+
+          <div id="detail-Sunrise" class="pd-card">
+            <img id="detail-Sunrise__icon"
+              src="./src/assets/images/animate/sunrise.svg" alt="" width="48px"
+              height="48px">
+            <div id="detail-Sunrise__main" class="detail-style">
+              <p> Mặt trời mọc</p>
+              <p></p>
+            </div>
+          </div>
+          <div id="detail-Sunset" class="pd-card">
+            <img id="detail-Sunset__icon"
+              src="./src/assets/images/animate/sunset.svg" alt="" width="48px"
+              height="48px">
+            <div id="detail-Sunset__main" class="detail-style">
+              <p>Mặt trời lặn</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div id="weather-alldays" class="pd-card">
+          <div id="monday">
+            <p>Monday</p>
+            <p>19:30</p>
+          </div>
+          <div id="tuesday">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+
+    </footer>
+    <script type="module" src="./src/main.js"></script>
+  </div>
+</body>
+
+</html>
