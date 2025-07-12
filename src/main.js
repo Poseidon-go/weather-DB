@@ -307,31 +307,107 @@ darkMode.addEventListener("click", () => {
 
 
 // Firebase
+// import { initializeApp } from "firebase/app";
+// import {
+//   getAuth,
+//   GoogleAuthProvider,
+//   signInWithPopup,
+//   onAuthStateChanged,
+//   signOut,
+// } from "firebase/auth";
+
+
+// const firebaseConfig = {
+//   apiKey: import.meta.env.VITE_FIREBASE_KEY,
+//   authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+//   projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+// };
+
+// const app = initializeApp(firebaseConfig);
+// const auth = getAuth(app);
+// const provider = new GoogleAuthProvider();
+
+// // DOM
+// const loginBtn = document.getElementById("login-btn");
+// const logoutBtn = document.getElementById("logout-btn");
+// const loginContainer = document.getElementById("login-container");
+// const mainContent = document.getElementById("main");
+// const userInfo = document.getElementById("user-info");
+// const userName = document.getElementById("user-name");
+// const headerContent = document.querySelector("header");
+
+// // Xử lý sự kiện đăng nhập
+// document.getElementById('login-btn').addEventListener('click', () => {
+//   signInWithPopup(auth, provider)
+//     .then((result) => {
+//       console.log('Đăng nhập thành công:', result.user.displayName);
+//     })
+//     .catch((error) => {
+//       console.error('Lỗi đăng nhập:', error.message);
+//     });
+// });
+// // Theo dõi trạng thái đăng nhập
+// onAuthStateChanged(auth, (user) => {
+//   if (user) {
+//     loginContainer.style.display = "none";
+//     mainContent.style.display = "block";
+//     userInfo.style.display = "flex";
+//     userName.textContent = `Xin chào, ${user.displayName}`;
+//     headerContent.style.display = "inline-block";
+//   } else {
+//     loginContainer.style.display = "flex";
+//     mainContent.style.display = "none";
+//     userInfo.style.display = "none";
+//     headerContent.style.display = "none";
+//   }
+// });
+
+
+// // 3. Đăng xuất
+// logoutBtn.addEventListener("click", () => {
+//   signOut(auth)
+//     .then(() => {
+//       // Ví dụ: ẩn nội dung, hiện lại khối đăng nhập
+//       document.getElementById("main").style.display = "none";
+//       document.getElementById("login-container").style.display = "flex";
+//     })
+//     .catch((error) => {
+//       console.error("Lỗi khi đăng xuất:", error.message);
+//     });
+// });
+
+
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
+  signInWithPopup,
   signInWithRedirect,
   getRedirectResult,
   onAuthStateChanged,
   signOut,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 
-
 const firebaseConfig = {
-  // apiKey: import.meta.env.VITE_FIREBASE_KEY,
-  // authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
-  // projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-  apiKey: "AIzaSyD1hVdSpXeMMpcOQSSag8Omb3HVWU9KPq8",
-  authDomain: "weather-9b6b2.firebaseapp.com",
-  projectId: "weather-9b6b2",
+  apiKey: import.meta.env.VITE_FIREBASE_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-// DOM
+// Cấu hình Google Provider với các scope cần thiết
+const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope('profile');
+googleProvider.addScope('email');
+googleProvider.setCustomParameters({
+  prompt: 'select_account'
+});
+
+// DOM Elements
 const loginBtn = document.getElementById("login-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const loginContainer = document.getElementById("login-container");
@@ -340,35 +416,103 @@ const userInfo = document.getElementById("user-info");
 const userName = document.getElementById("user-name");
 const headerContent = document.querySelector("header");
 
-// Xử lý đăng nhập
-loginBtn.addEventListener("click", () => {
-  signInWithRedirect(auth, provider)
-    .then((result) => {
-      console.log("Đăng nhập thành công:", result.user.displayName);
-    })
-    .catch((error) => {
-      console.error("Lỗi đăng nhập:", error);
-    });
+// Phát hiện thiết bị và trình duyệt
+const deviceInfo = {
+  isIOS: /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream,
+  isAndroid: /Android/.test(navigator.userAgent),
+  isMobile: /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+  isChrome: /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor),
+  isSafari: /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor),
+  isFirefox: navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
+};
+
+console.log('Device Info:', deviceInfo);
+
+// Set persistence để duy trì đăng nhập
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error('Error setting persistence:', error);
 });
 
+// Hàm đăng nhập thông minh
+async function smartGoogleSignIn() {
+  try {
+    // Hiển thị loading
+    showLoading(true);
+
+    // Strategy: Thử popup trước, fallback sang redirect
+    if (deviceInfo.isIOS && deviceInfo.isSafari) {
+      // iOS Safari: Luôn dùng redirect
+      console.log('iOS Safari detected - using redirect');
+      await signInWithRedirect(auth, googleProvider);
+    } else if (deviceInfo.isMobile) {
+      // Mobile khác: Thử popup, fallback redirect
+      console.log('Mobile device detected - trying popup first');
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        console.log('Mobile popup success:', result.user.displayName);
+      } catch (popupError) {
+        console.log('Mobile popup failed, trying redirect:', popupError.code);
+        if (popupError.code === 'auth/popup-blocked' ||
+          popupError.code === 'auth/cancelled-popup-request') {
+          await signInWithRedirect(auth, googleProvider);
+        } else {
+          throw popupError;
+        }
+      }
+    } else {
+      // Desktop: Ưu tiên popup
+      console.log('Desktop detected - using popup');
+      const result = await signInWithPopup(auth, googleProvider);
+      console.log('Desktop popup success:', result.user.displayName);
+    }
+  } catch (error) {
+    console.error('Sign in error:', error);
+    handleAuthError(error);
+  } finally {
+    showLoading(false);
+  }
+}
+
+// Xử lý kết quả redirect (quan trọng cho iOS và mobile)
 getRedirectResult(auth)
   .then((result) => {
-    if (result && result.user) {
-      console.log("Đăng nhập thành công:", result.user.displayName);
+    if (result) {
+      console.log('Redirect sign-in successful:', result.user.displayName);
+      showMessage('Đăng nhập thành công!', 'success');
     }
   })
   .catch((error) => {
-    console.error("Lỗi đăng nhập sau redirect:", error.message);
+    console.error('Redirect result error:', error);
+    handleAuthError(error);
   });
+
+// Event listener cho nút đăng nhập
+loginBtn?.addEventListener('click', smartGoogleSignIn);
+
 // Theo dõi trạng thái đăng nhập
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    // Đăng nhập thành công
     loginContainer.style.display = "none";
     mainContent.style.display = "block";
     userInfo.style.display = "flex";
     userName.textContent = `Xin chào, ${user.displayName}`;
     headerContent.style.display = "inline-block";
+
+    // Hiển thị avatar nếu có
+    const userAvatar = document.getElementById('user-avatar');
+    if (userAvatar && user.photoURL) {
+      userAvatar.src = user.photoURL;
+      userAvatar.style.display = 'block';
+    }
+
+    console.log('User signed in:', {
+      name: user.displayName,
+      email: user.email,
+      provider: user.providerData[0]?.providerId
+    });
   } else {
+    // Chưa đăng nhập
     loginContainer.style.display = "flex";
     mainContent.style.display = "none";
     userInfo.style.display = "none";
@@ -376,15 +520,77 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
-// 3. Đăng xuất
-logoutBtn?.addEventListener("click", () => {
-  signOut(auth)
-    .then(() => {
-      console.log("Đã đăng xuất");
-    })
-    .catch((error) => {
-      console.error("Lỗi khi đăng xuất:", error.message);
-    });
+// Đăng xuất
+logoutBtn?.addEventListener("click", async () => {
+  try {
+    await signOut(auth);
+    console.log('Đăng xuất thành công');
+    showMessage('Đã đăng xuất!', 'info');
+  } catch (error) {
+    console.error("Lỗi khi đăng xuất:", error.message);
+    handleAuthError(error);
+  }
 });
 
+// Hàm hiển thị loading
+function showLoading(show) {
+  const loadingElement = document.getElementById('loading');
+  if (loadingElement) {
+    loadingElement.style.display = show ? 'block' : 'none';
+  }
+
+  if (loginBtn) {
+    loginBtn.disabled = show;
+    loginBtn.textContent = show ? 'Đang đăng nhập...' : 'Đăng nhập với Google';
+  }
+}
+
+// Hàm xử lý lỗi
+function handleAuthError(error) {
+  const errorMessages = {
+    'auth/popup-blocked': 'Popup bị chặn. Vui lòng cho phép popup và thử lại.',
+    'auth/popup-closed-by-user': 'Bạn đã đóng cửa sổ đăng nhập.',
+    'auth/cancelled-popup-request': 'Đăng nhập bị hủy.',
+    'auth/network-request-failed': 'Lỗi mạng. Vui lòng kiểm tra kết nối.',
+    'auth/too-many-requests': 'Quá nhiều yêu cầu. Vui lòng thử lại sau.',
+    'auth/user-disabled': 'Tài khoản đã bị vô hiệu hóa.',
+    'auth/operation-not-allowed': 'Phương thức đăng nhập chưa được kích hoạt.',
+    'auth/invalid-credential': 'Thông tin đăng nhập không hợp lệ.',
+  };
+
+  const message = errorMessages[error.code] || `Lỗi đăng nhập: ${error.message}`;
+  showMessage(message, 'error');
+}
+
+// Hàm hiển thị thông báo
+function showMessage(message, type = 'info') {
+  const messageElement = document.getElementById('message');
+  if (messageElement) {
+    messageElement.textContent = message;
+    messageElement.className = `message ${type}`;
+    messageElement.style.display = 'block';
+
+    setTimeout(() => {
+      messageElement.style.display = 'none';
+    }, 5000);
+  } else {
+    console.log(message);
+  }
+}
+
+// Kiểm tra trạng thái mạng
+window.addEventListener('online', () => {
+  console.log('Network back online');
+});
+
+window.addEventListener('offline', () => {
+  console.log('Network offline');
+  showMessage('Mất kết nối mạng', 'error');
+});
+
+// Debug info
+console.log('Firebase Auth initialized for:', {
+  device: deviceInfo,
+  authDomain: firebaseConfig.authDomain,
+  projectId: firebaseConfig.projectId
+});
