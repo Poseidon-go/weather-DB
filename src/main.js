@@ -311,10 +311,12 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
+
 
 const firebaseConfig = {
   // apiKey: import.meta.env.VITE_FIREBASE_KEY,
@@ -340,7 +342,7 @@ const headerContent = document.querySelector("header");
 
 // Xử lý đăng nhập
 loginBtn.addEventListener("click", () => {
-  signInWithPopup(auth, provider)
+  signInWithRedirect(auth, provider)
     .then((result) => {
       console.log("Đăng nhập thành công:", result.user.displayName);
     })
@@ -349,6 +351,15 @@ loginBtn.addEventListener("click", () => {
     });
 });
 
+getRedirectResult(auth)
+  .then((result) => {
+    if (result && result.user) {
+      console.log("Đăng nhập thành công:", result.user.displayName);
+    }
+  })
+  .catch((error) => {
+    console.error("Lỗi đăng nhập sau redirect:", error.message);
+  });
 // Theo dõi trạng thái đăng nhập
 onAuthStateChanged(auth, (user) => {
   if (user) {
