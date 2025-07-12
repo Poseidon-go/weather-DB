@@ -21,16 +21,33 @@
 
 <body>
   <div id="app">
+    <div id="login-container">
+      <div class="login-card">
+        <h2>Weather App</h2>
+        <p>Vui lòng đăng nhập để xem thời tiết</p>
+        <button id="login-btn">
+          <i class='bx bxl-google'></i> Đăng nhập bằng Google
+        </button>
+      </div>
+    </div>
+
+
     <header>
-      <div class="logo pd-header">
-        <i class='bx bx-cloud-sun'></i>
+      <div id="user-info" class="card" style="display: none;">
+        <p id="user-name"></p>
+        <button id="logout-btn">Đăng xuất</button>
       </div>
-      <div class="search pd-header">
-        <i class='bx  bx-search-alt'></i>
+      <div class="small-icon">
+        <div class="logo card">
+          <i class='bx bx-cloud-sun'></i>
+        </div>
+        <div class="darkMode card ">
+          <i class='bx bx-moon'></i>
+        </div>
+      </div>
+      <div class="search card">
+        <i id="search-icon" class='bx  bx-search-alt'></i>
         <input id="data-city" type="text" placeholder="Ho Chi Minh">
-      </div>
-      <div class="darkMode pd-header">
-        <i class='bx bx-moon'></i>
       </div>
     </header>
 
@@ -39,12 +56,13 @@
     </div>
 
     <div id="main">
-      <h3 class="Weather-title">Today OverView</h3>
+      <h3 class="Weather-title">Tổng quan hôm nay</h3>
 
       <div class="Weather-screen">
         <div class="weather-current">
           <div id="weather-condition">
-            <i id="weather-icon" class='bx  bx-cloud-snow'></i>
+            <img src="./src/assets/images/condition/03d.svg"
+              alt="condition-image" width="100px" height="100px">
           </div>
           <div id="weather-temp">
             <p></p>
@@ -66,7 +84,7 @@
           </div>
         </div>
         <div id="weather-detail">
-          <div id="detail-wind" class="pd-card">
+          <div id="detail-wind" class="card">
             <img id="detail-wind__icon"
               src="./src/assets/images/animate/wind-speed.svg" alt=""
               width="48px" height="48px">
@@ -76,7 +94,7 @@
             </div>
           </div>
 
-          <div id="detail-Humidity" class="pd-card">
+          <div id="detail-Humidity" class="card">
             <img id="detail-Humidity__icon"
               src="./src/assets/images/animate/humidity.svg" alt="" width="48px"
               height="48px">
@@ -86,7 +104,7 @@
             </div>
           </div>
 
-          <div id="detail-Pressure" class="pd-card">
+          <div id="detail-Pressure" class="card">
             <img id="detail-Pressure__icon"
               src="./src/assets/images/animate/pressure.svg" alt="" width="48px"
               height="48px">
@@ -96,7 +114,7 @@
             </div>
           </div>
 
-          <div id="detail-Visibility" class="pd-card">
+          <div id="detail-Visibility" class="card">
             <img id="detail-Visibility__icon"
               src="./src/assets/images/animate/visibility.svg" alt=""
               width="48px" height="48px">
@@ -107,7 +125,7 @@
           </div>
 
 
-          <div id="detail-Sunrise" class="pd-card">
+          <div id="detail-Sunrise" class="card">
             <img id="detail-Sunrise__icon"
               src="./src/assets/images/animate/sunrise.svg" alt="" width="48px"
               height="48px">
@@ -116,7 +134,7 @@
               <p></p>
             </div>
           </div>
-          <div id="detail-Sunset" class="pd-card">
+          <div id="detail-Sunset" class="card">
             <img id="detail-Sunset__icon"
               src="./src/assets/images/animate/sunset.svg" alt="" width="48px"
               height="48px">
@@ -126,20 +144,16 @@
             </div>
           </div>
         </div>
-        <div id="weather-alldays" class="pd-card">
-          <div id="monday">
-            <p>Monday</p>
-            <p>19:30</p>
-          </div>
-          <div id="tuesday">
-
-          </div>
+        <div id="weather-alldays" class="card">
+          <p>Thời tiết thay đổi thất thường</p>
         </div>
       </div>
     </div>
 
     <footer>
-
+      <Button id="scrollUp">
+        <i class='bx  bx-finger-up'></i>
+      </Button>
     </footer>
     <script type="module" src="./src/main.js"></script>
   </div>
