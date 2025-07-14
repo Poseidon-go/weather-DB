@@ -137,6 +137,11 @@ i {
   cursor: pointer;
 }
 
+body {
+  visibility: hidden;
+  /* Ẩn toàn bộ UI lúc đầu */
+}
+
 /* main */
 .Weather-title {
   font-size: 30px;
