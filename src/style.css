@@ -10,6 +10,8 @@
   --secondary-text: #64748b;
   --btn-login: #3498db;
   --color-img: 0;
+  --btn-success: #27ae60;
+  --btn-error: #c0392b;
 }
 
 /* role shared */
@@ -309,15 +311,67 @@ header {
 
 .login-card {
   text-align: center;
-  padding: 2rem;
+  padding: 4rem;
   border: 1px solid #ccc;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+#userForm,
+#passForm {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+}
+
+#passForm {
+  position: relative;
+}
+
+#passForm #showPass {
+  position: absolute;
+  top: 8px;
+  right: -41px;
+
+  cursor: pointer;
+}
+
+#userForm label,
+#passForm label {
+  display: inline-block;
+  font-size: 13px;
+}
+
+.login-card input {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid var(--btn-login);
+  margin-left: 10px;
+}
+
+
+.login-card input:focus {
+  outline: none;
+  border-color: var(--btn-success);
+}
+
+.login-card h4 {
+  margin-bottom: 10px;
+}
+
+#user-noti,
+#pass-noti {
+  font-size: 12px;
+  color: var(--btn-error);
+  margin-left: 18px;
+  margin-bottom: 5px;
+}
+
 #login-btn {
-  background-color: #4285f4;
-  color: white;
+  background-color: var(--btn-login);
+  color: var(--text-btn);
   padding: 10px 18px;
   font-size: 16px;
   border: none;

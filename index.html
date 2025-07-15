@@ -38,11 +38,19 @@
   <div id="app">
     <div id="login-container">
       <div class="login-card">
-        <h2>Weather App</h2>
-        <p>Vui lòng đăng nhập để xem thời tiết</p>
-        <button id="login-btn">
-          <i class='bx bxl-google'></i> Đăng nhập bằng Google
-        </button>
+        <h4>Đăng Nhập để xem thời tiết</h4>
+        <div id="userForm">
+          <label for="">Email</label>
+          <input type="text" name="" id="username" placeholder="user@mail.com">
+        </div>
+        <p id="user-noti"></p>
+        <div id="passForm">
+          <label for="">Mật Khẩu</label>
+          <input type="password" name="" id="password" placeholder="Mật khẩu">
+          <i class='bx  bx-eye-slash' id="showPass"></i>
+        </div>
+        <p id="pass-noti"></p>
+        <button id="login-btn">Đăng Nhập</button>
       </div>
     </div>
     <header>
