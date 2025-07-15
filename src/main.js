@@ -409,7 +409,7 @@ loginBtn.addEventListener('click', async (e) => {
     loginBtn.innerHTML = "Đang đăng nhập...";
 
     const userCredential = await signInWithEmailAndPassword(auth, emailValue, passwordValue);
-
+    console.log(userCredential)
     // Xử lý sau khi đăng nhập thành công
     loginContainer.style.display = "none";
     mainContent.style.display = "block";
