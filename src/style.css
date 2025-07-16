@@ -327,6 +327,7 @@ header {
 }
 
 .auth-card {
+  background-color: var(--secondary-background);
   padding: 4rem;
   border-radius: 5px;
   min-width: 400px;
@@ -360,6 +361,8 @@ header {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 400;
+
+  color: var(--primary-text);
 }
 
 .form-group input {

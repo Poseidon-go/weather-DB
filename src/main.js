@@ -556,7 +556,6 @@ const loginPasswordToggle = document.getElementById('login-password-toggle');
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  console.log("đang click đăng ký")
 
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
@@ -569,8 +568,6 @@ registerForm.addEventListener("submit", async (e) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
-    console.log('User registered:', user.uid);
 
     // Show success message
     alert('Đăng ký thành công!');
@@ -605,7 +602,6 @@ loginForm.addEventListener("submit", async (e) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     const nameUser = user.email.slice(0, -10) || "Anonymous"
-    console.log(user)
 
     // Show success message
     alert('Đăng nhập thành công!');
@@ -638,8 +634,6 @@ loginForm.addEventListener("submit", async (e) => {
     loginButton.innerHTML = "Đăng Nhập";
   }
 })
-
-
 
 loginBtn.addEventListener("click", () => {
   signOut(auth)
