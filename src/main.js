@@ -593,7 +593,6 @@ loginForm.addEventListener("submit", async (e) => {
   const email = loginEmailInput.value.trim();
   const password = loginPasswordInput.value.trim();
 
-
   // Disable button và show loading
   loginButton.disabled = true;
   loginButton.innerHTML = "Đang đăng nhập...";
@@ -629,6 +628,10 @@ loginForm.addEventListener("submit", async (e) => {
 
   } catch (error) {
     console.log("Lỗi", error)
+    loginPasswordError.innerHTML = "Mật khẩu không đúng";
+    loginEmailError.innerHTML = "Email không đúng";
+    loginPasswordInput.style.borderColor = "var(--btn-error)"
+    loginEmailInput.style.borderColor = "var(--btn-error)"
   } finally {
     loginButton.disabled = false;
     loginButton.innerHTML = "Đăng Nhập";
