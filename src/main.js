@@ -582,14 +582,16 @@ registerForm.addEventListener("submit", async (e) => {
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  // Blur any focused input to hide keyboard
+  document.activeElement.blur();
+
   const email = loginEmailInput.value.trim();
   const password = loginPasswordInput.value.trim();
-  const confirmPassword = confirmPasswordInput.value.trim();
 
 
-  // Hiển thị loading state trước khi gọi API
+  // Disable button và show loading
   loginButton.disabled = true;
-  loginButton.innerHTML = "Đang Đăng Nhập...";
+  loginButton.innerHTML = "Đang đăng nhập...";
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
