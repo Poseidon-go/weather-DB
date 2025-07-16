@@ -259,54 +259,41 @@ body {
 
 /* error */
 #Error-Show {
-  position: fixed;
-  /* Thay vì absolute */
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  /* Giới hạn chiều rộng trên mobile */
-  max-width: 400px;
-  z-index: 1000;
+  display: none;
 }
 
 #Error {
-  background-color: var(--secondary-background);
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  background-color: var(--secondary-background);
+  margin-bottom: 10px;
 }
 
-/* Media query cho mobile */
-@media screen and (max-width: 768px) {
-  #Error-Show {
-    top: auto;
-    /* Đặt lại top */
-    bottom: 20px;
-    /* Hiển thị ở dưới trên mobile */
-    width: 90%;
-  }
+#Error-noti {
+  display: flex;
+  align-items: center;
+}
 
-  #Error {
-    flex-direction: column;
-    padding: 0.75rem;
-  }
+#Error-noti i {
+  margin-right: 10px;
+}
 
-  #Error-noti {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
+#Error-out button {
+  padding: 14px 16px;
+  border-radius: 5px;
 
-  #Error-out button {
-    width: 100%;
-    padding: 0.5rem;
-    min-height: 44px;
-    /* Touch target size */
-  }
+  font-size: 16px;
+  line-height: 1.2;
+  outline: none;
+  border: 1px solid var(--primary-border);
+  background-color: var(--primary-border);
+  color: var(--text-btn);
+
+  cursor: pointer;
 }
 
 footer {
@@ -438,6 +425,9 @@ header {
 
 /* responsive */
 @media (max-width: 575.98px) {
+  #Error-Show {
+    display: none;
+  }
 
   input,
   textarea,
