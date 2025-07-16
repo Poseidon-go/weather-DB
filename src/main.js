@@ -111,15 +111,19 @@ async function getWeatherCurrent(city) {
 // 5. UI Update Functions
 // show error
 const showError = (message) => {
-  const ErrorE = document.getElementById("Error-Show");
+  const header = document.querySelector("header");
   const inputField = document.getElementById("data-city");
-  if (!ErrorE) return;
 
-  // Xóa các thông báo lỗi cũ nếu có
-  ErrorE.innerHTML = '';
+  let errorDiv = document.getElementById("Error-Show");
 
-  ErrorE.style.display = "block";
-  ErrorE.innerHTML = `
+  if (!errorDiv) {
+    errorDiv = document.createElement("div");
+    errorDiv.id = "Error-Show";
+    header.insertAdjacentElement("afterend", errorDiv);
+  }
+
+  // Gán nội dung lỗi
+  errorDiv.innerHTML = `
     <div id="Error">
       <div id="Error-noti">
         <i class='bx bx-alert-octagon'></i>
@@ -130,20 +134,24 @@ const showError = (message) => {
       </div>
     </div>
   `;
+  errorDiv.style.display = "block";
 
-  // Thêm xử lý đóng thông báo lỗi
-  const closeBtn = document.getElementById('error-close');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      ErrorE.style.display = "none";
-      ErrorE.innerHTML = '';
-      if (inputField) {
-        inputField.value = '';
-        inputField.focus();
-      }
-    });
-  }
+  // ✅ Dùng setTimeout để đảm bảo DOM đã cập nhật
+  setTimeout(() => {
+    const closeBtn = document.getElementById("error-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        errorDiv.style.display = "none";
+        errorDiv.innerHTML = "";
+        if (inputField) {
+          inputField.value = '';
+          inputField.focus();
+        }
+      });
+    }
+  }, 0);
 };
+
 
 const handleSearch = async (searchValue) => {
   try {
@@ -606,16 +614,23 @@ loginForm.addEventListener("submit", async (e) => {
     loginEmailInput.value = '';
     loginPasswordInput.value = '';
 
-    if (user) {
-      authContainer.style.display = "none";
-      headerContent.style.display = "block";
-      mainContent.style.display = "block";
-      userName.innerHTML = `xin chào: ${nameUser}`;
-    } else {
-      authContainer.style.display = "flex";
-      headerContent.style.display = "none";
-      mainContent.style.display = "none";
-    }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (user) {
+          authContainer.style.display = "none";
+          headerContent.style.display = "block";
+          mainContent.style.display = "block";
+          userName.innerHTML = `xin chào: ${nameUser}`;
+        } else {
+          authContainer.style.display = "flex";
+          headerContent.style.display = "none";
+          mainContent.style.display = "none";
+        }
+      } else {
+        console.log("Chưa đăng nhập");
+      }
+    });
+
   } catch (error) {
     console.log("Lỗi", error)
   } finally {
@@ -623,6 +638,8 @@ loginForm.addEventListener("submit", async (e) => {
     loginButton.innerHTML = "Đăng Nhập";
   }
 })
+
+
 
 loginBtn.addEventListener("click", () => {
   signOut(auth)

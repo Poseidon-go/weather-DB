@@ -258,9 +258,7 @@ body {
 
 
 /* error */
-#Error-Show {
-  display: none;
-}
+#Error-Show {}
 
 #Error {
   width: 100%;
