@@ -36,25 +36,80 @@
 
 <body>
   <div id="app">
-    <div id="login-container">
-      <div class="login-card">
-        <h4>Đăng Nhập để xem thời tiết</h4>
-        <div id="userForm">
-          <label for="">Email</label>
-          <input type="text" name="" id="username" placeholder="user@mail.com">
+    <!-- Form đăng nhập -->
+    <div id="auth-container">
+      <!-- <div id="alert">
+        <p class="alert-para">Đăng Ký thành công</p>
+      </div> -->
+      <form class="auth-card" id="login-form">
+        <h4 class="auth-title">Đăng nhập để xem thời tiết</h4>
+
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="user@gmail.com">
+          <p class="error-message" id="login-email-error"></p>
         </div>
-        <p id="user-noti"></p>
-        <div id="passForm">
-          <label for="">Mật Khẩu</label>
-          <input type="password" name="" id="password" placeholder="Mật khẩu">
-          <i class='bx  bx-eye-slash' id="showPass"></i>
+
+        <div class="form-group">
+          <label for="login-password">Mật khẩu</label>
+          <div class="password-field">
+            <input type="password" id="login-password"
+              placeholder="Nhập mật khẩu">
+            <i class='bx bx-eye-slash' id="login-password-toggle"></i>
+          </div>
+          <p class="error-message" id="login-password-error"></p>
         </div>
-        <p id="pass-noti"></p>
-        <button id="login-btn">Đăng Nhập</button>
-      </div>
+
+        <button class="auth-button" id="login-submit">Đăng nhập</button>
+
+        <p class="switch-auth">
+          Chưa có tài khoản?
+          <span id="switch-to-register">Đăng ký ngay</span>
+        </p>
+      </form>
+
+      <!-- Form đăng ký -->
+      <form class="auth-card" id="register-form" style="display: none;">
+        <h4 class="auth-title">Đăng ký tài khoản</h4>
+
+        <div class="form-group">
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" placeholder="user@gmail.com">
+          <p class="error-message" id="register-email-error"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="register-password">Mật khẩu</label>
+          <div class="password-field">
+            <input type="password" id="register-password"
+              placeholder="Tối thiểu 6 ký tự">
+            <i class='bx bx-eye-slash' id="register-password-toggle"></i>
+          </div>
+          <p class="error-message" id="register-password-error"></p>
+        </div>
+
+        <div class="form-group">
+          <label for="register-confirm">Xác nhận mật khẩu</label>
+          <div class="password-field">
+            <input type="password" id="register-confirm"
+              placeholder="Nhập lại mật khẩu">
+            <i class='bx bx-eye-slash' id="register-confirm-toggle"></i>
+          </div>
+          <p class="error-message" id="register-confirm-error"></p>
+        </div>
+
+        <button class="auth-button" id="register-submit">Đăng ký</button>
+
+        <p class="switch-auth">
+          Đã có tài khoản?
+          <span id="switch-to-login">Đăng nhập</span>
+        </p>
+      </form>
     </div>
+
+
     <header>
-      <div id="user-info" class="card" style="display: none;">
+      <div id="user-info" class="card">
         <p id="user-name"></p>
         <button id="logout-btn">Đăng xuất</button>
       </div>
@@ -176,7 +231,8 @@
         <i class='bx  bx-finger-up'></i>
       </Button>
     </footer>
-    <script type="module" src="./src/main.js"></script>
+  </div>
+  <script type="module" src="./src/main.js"></script>
   </div>
 </body>
 

@@ -305,56 +305,197 @@ darkMode.addEventListener("click", () => {
 
 // validation
 const validationForm = () => {
-  const userNoti = document.getElementById("user-noti");
-  if (!userNoti) return;
-  const passNoti = document.getElementById("pass-noti");
-  if (!passNoti) return;
-  const userName = document.getElementById("username");
-  if (!userName) return;
-  const passWord = document.getElementById("password");
-  if (!passWord) return;
+  const inputs = document.querySelectorAll(".form-group input");
+  if (!inputs.length) return;
 
-  // Show pass
-  const showPass = document.getElementById("showPass");
-  if (!showPass) return;
+  const loginForm = document.getElementById("login-form");
+  const registerForm = document.getElementById("register-form");
+  const switchToRegister = document.getElementById("switch-to-register");
+  const switchToLogin = document.getElementById("switch-to-login");
 
-  showPass.addEventListener("click", () => {
-    if (passWord.type === "password") {
-      passWord.type = "text";
-      showPass.classList.add("bx-eye");
-      showPass.classList.remove("bx-eye-slash");
-    } else {
-      passWord.type = "password";
-      showPass.classList.remove("bx-eye");
-      showPass.classList.add("bx-eye-slash");
+  if (!loginForm || !registerForm || !switchToRegister || !switchToLogin) return;
+
+  const VALIDATION_RULES = {
+    email: {
+      required: true,
+      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      minLength: 6,
+      messages: {
+        required: "Vui lòng nhập email",
+        pattern: "Email không hợp lệ",
+        minLength: "Email phải có ít nhất 6 ký tự"
+      }
+    },
+    password: {
+      required: true,
+      minLength: 6,
+      pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+      messages: {
+        required: "Vui lòng nhập mật khẩu",
+        minLength: "Mật khẩu phải có ít nhất 6 ký tự",
+        pattern: "Mật khẩu phải có cả chữ và số"
+      }
+    },
+    confirm: {
+      required: true,
+      match: true,
+      messages: {
+        required: "Vui lòng xác nhận mật khẩu",
+        match: "Mật khẩu không khớp"
+      }
     }
-  })
-  userName.addEventListener("blur", (e) => {
-    if (e.target.value.trim() === "") {
-      userName.style.borderColor = "var(--btn-error)";
-      userNoti.innerHTML = "Bạn đang bỏ trống, xin hãy nhập email";
-    } else if (!e.target.value.trim().includes("@")) {
-      userName.style.borderColor = "var(--btn-success)";
-      userNoti.innerHTML = "Email phải có @ nhé bạn";
-    } else {
-      userName.style.borderColor = "var(--btn-success)";
-      userNoti.innerHTML = "";
+  };
+
+  const validateInput = (input) => {
+    let fieldType = 'password';
+    if (input.id.includes('email')) {
+      fieldType = 'email';
+    } else if (input.id.includes('confirm')) {
+      fieldType = 'confirm';
     }
-  })
-  passWord.addEventListener("blur", (e) => {
-    if (e.target.value.trim() === "") {
-      passWord.style.borderColor = "var(--btn-error)";
-      passNoti.innerHTML = "Bạn đang bỏ trống, xin hãy nhập mật khẩu";
+
+    const rules = VALIDATION_RULES[fieldType];
+    const errorElement = document.getElementById(`${input.id}-error`);
+    const value = input.value.trim();
+
+    // Reset styles
+    input.style.borderColor = "";
+    errorElement.innerHTML = "";
+
+    // Required check
+    if (!value) {
+      input.style.borderColor = "var(--btn-error)";
+      errorElement.innerHTML = rules.messages.required;
+      return false;
     }
-    else {
-      passWord.style.borderColor = "var(--btn-success)";
-      passNoti.innerHTML = "";
+
+    // MinLength check for password and email
+    if (rules.minLength && value.length < rules.minLength) {
+      input.style.borderColor = "var(--btn-error)";
+      errorElement.innerHTML = rules.messages.minLength;
+      return false;
     }
-  })
-}
+
+    // Pattern check for password and email
+    if (rules.pattern && !rules.pattern.test(value)) {
+      input.style.borderColor = "var(--btn-error)";
+      errorElement.innerHTML = rules.messages.pattern;
+      return false;
+    }
+
+    // Confirm password check
+    if (fieldType === 'confirm') {
+      const passwordInput = document.getElementById('register-password');
+      if (passwordInput && value !== passwordInput.value) {
+        input.style.borderColor = "var(--btn-error)";
+        errorElement.innerHTML = rules.messages.match;
+        return false;
+      }
+    }
+
+    // Validation passed
+    input.style.borderColor = "var(--btn-success)";
+    return true;
+  };
+
+  // Add event listeners to all inputs
+  inputs.forEach(input => {
+    // Validate on blur
+    input.addEventListener("blur", () => {
+      validateInput(input);
+    });
+
+    // Clear error on input
+    input.addEventListener("input", () => {
+      const errorElement = document.getElementById(`${input.id}-error`);
+      input.style.borderColor = "";
+      errorElement.innerHTML = "";
+    });
+  });
+
+  // Form submit validation
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const loginInputs = loginForm.querySelectorAll("input");
+    let isValid = true;
+
+    loginInputs.forEach(input => {
+      if (!validateInput(input)) {
+        isValid = false;
+      }
+    });
+
+    if (isValid) {
+      // Proceed with login
+      console.log("Form is valid - proceed with login");
+    }
+  });
+
+  // Switch between login and register forms
+  switchToRegister.addEventListener("click", () => {
+    loginForm.style.display = "none";
+    registerForm.style.display = "block";
+    // Clear all inputs and errors
+    inputs.forEach(input => {
+      input.value = "";
+      input.style.borderColor = "";
+      const errorElement = document.getElementById(`${input.id}-error`);
+      if (errorElement) errorElement.innerHTML = "";
+    });
+  });
+
+  switchToLogin.addEventListener("click", () => {
+    registerForm.style.display = "none";
+    loginForm.style.display = "block";
+    // Clear all inputs and errors
+    inputs.forEach(input => {
+      input.value = "";
+      input.style.borderColor = "";
+      const errorElement = document.getElementById(`${input.id}-error`);
+      if (errorElement) errorElement.innerHTML = "";
+    });
+  });
+};
+
 validationForm();
 
+const handleTogglePassword = () => {
+  // Lấy tất cả các toggle password
+  const toggleButtons = document.querySelectorAll('[id$="-password-toggle"]');
+  if (!toggleButtons) return;
+  const confirmButton = document.getElementById("register-confirm-toggle");
+  if (!confirmButton) return;
+  toggleButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const passwordField = button.parentElement.querySelector('input');
 
+      // Toggle type của input
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        button.classList.remove('bx-eye-slash');
+        button.classList.add('bx-eye');
+      } else {
+        passwordField.type = 'password';
+        button.classList.remove('bx-eye');
+        button.classList.add('bx-eye-slash');
+      }
+    });
+  });
+
+  confirmButton.addEventListener("click", () => {
+    if (document.getElementById("register-confirm").type === "password") {
+      document.getElementById("register-confirm").type = "text";
+      confirmButton.classList.remove('bx-eye-slash');
+      confirmButton.classList.add('bx-eye');
+    } else {
+      document.getElementById("register-confirm").type = "password";
+      confirmButton.classList.add('bx-eye-slash');
+      confirmButton.classList.remove('bx-eye');
+    }
+  })
+};
+
+handleTogglePassword();
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -362,7 +503,8 @@ import {
   getAuth,
   signOut,
   signInWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
+  createUserWithEmailAndPassword  // Thêm dòng này
 } from "firebase/auth";
 
 
@@ -377,121 +519,117 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
 // DOM
-const loginBtn = document.getElementById("login-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const loginContainer = document.getElementById("login-container");
-const mainContent = document.getElementById("main");
-const userName = document.getElementById("username");
-const password = document.getElementById("password");
+const authContainer = document.getElementById("auth-container");
 const headerContent = document.querySelector("header");
+const mainContent = document.getElementById("main");
+const userName = document.getElementById("user-name");
+const loginBtn = document.getElementById("logout-btn");
 
-// // Xử lý sự kiện đăng nhập
-loginBtn.addEventListener('click', async (e) => {
+
+// DOM elements for registration form
+const registerButton = document.getElementById('register-submit');
+const registerForm = document.getElementById('register-form');
+const emailInput = document.getElementById('register-email');
+const passwordInput = document.getElementById('register-password');
+const confirmPasswordInput = document.getElementById('register-confirm');
+
+
+// DOM elements for login form
+const loginForm = document.getElementById('login-form');
+const loginEmailInput = document.getElementById('login-email');
+const loginPasswordInput = document.getElementById('login-password');
+const loginEmailError = document.getElementById('login-email-error');
+const loginPasswordError = document.getElementById('login-password-error');
+const loginButton = document.getElementById('login-submit');
+const loginPasswordToggle = document.getElementById('login-password-toggle');
+// Ui Alert
+
+registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // Lấy giá trị từ form
-  const emailValue = userName.value.trim();
-  const passwordValue = password.value.trim();
+  console.log("đang click đăng ký")
 
-  const userNoti = document.getElementById("user-noti");
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  const confirmPassword = confirmPasswordInput.value.trim();
 
-  // Validate
-  if (!emailValue || !passwordValue) {
-    userNoti.innerHTML = "Vui lòng nhập đầy đủ thông tin!";
-    return;
+
+  // Hiển thị loading state trước khi gọi API
+  registerButton.disabled = true;
+  registerButton.innerHTML = "Đang Đăng Ký...";
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    console.log('User registered:', user.uid);
+
+    // Show success message
+    alert('Đăng ký thành công!');
+
+    // Optionally, redirect to login page or clear form
+    emailInput.value = '';
+    passwordInput.value = '';
+    confirmPasswordInput.value = '';
+  } catch (error) {
+    console.log("đăng ký thất bại", error)
+  } finally {
+    registerButton.disabled = false;
+    registerButton.innerHTML = "Đăng Ký";
   }
+})
+
+loginForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = loginEmailInput.value.trim();
+  const password = loginPasswordInput.value.trim();
+  const confirmPassword = confirmPasswordInput.value.trim();
+
+
+  // Hiển thị loading state trước khi gọi API
+  loginButton.disabled = true;
+  loginButton.innerHTML = "Đang Đăng Nhập...";
 
   try {
-    // Disabled button khi đang xử lý
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = "Đang đăng nhập...";
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    const nameUser = user.email.slice(0, -10) || "Anonymous"
+    console.log(user)
 
-    const userCredential = await signInWithEmailAndPassword(auth, emailValue, passwordValue);
-    console.log(userCredential)
-    // Xử lý sau khi đăng nhập thành công
-    loginContainer.style.display = "none";
-    mainContent.style.display = "block";
-    headerContent.style.display = "inline-block";
-
-    // Hiển thị thông tin user
-    const userInfoName = document.getElementById("user-name");
-    userInfoName.textContent = `Xin chào, ${userCredential.user.email}`;
+    // Show success message
+    alert('Đăng nhập thành công!');
 
     // Clear form
-    userName.value = "";
-    password.value = "";
-    userNoti.innerHTML = "";
-    passNoti.innerHTML = "";
+    loginEmailInput.value = '';
+    loginPasswordInput.value = '';
 
-  } catch (error) {
-    // Xử lý các loại lỗi
-    let errorMessage = "Đăng nhập thất bại!";
-    switch (error.code) {
-      case 'auth/invalid-email':
-        errorMessage = "Email không hợp lệ!";
-        break;
-      case 'auth/user-disabled':
-        errorMessage = "Tài khoản đã bị vô hiệu hóa!";
-        break;
-      case 'auth/user-not-found':
-        errorMessage = "Email chưa được đăng ký!";
-        break;
-      case 'auth/wrong-password':
-        errorMessage = "Sai mật khẩu!";
-        break;
-      default:
-        errorMessage = error.message;
+    if (user) {
+      authContainer.style.display = "none";
+      headerContent.style.display = "block";
+      mainContent.style.display = "block";
+      userName.innerHTML = `xin chào: ${nameUser}`;
+    } else {
+      authContainer.style.display = "flex";
+      headerContent.style.display = "none";
+      mainContent.style.display = "none";
     }
-    userNoti.innerHTML = errorMessage;
-
-  } finally {
-    // Reset button state
-    loginBtn.disabled = false;
-    loginBtn.innerHTML = "Đăng nhập";
-  }
-});
-
-// Kiểm tra trạng thái đăng nhập
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User đã đăng nhập
-    loginContainer.style.display = "none";
-    mainContent.style.display = "block";
-    headerContent.style.display = "inline-block";
-
-    const userInfoName = document.getElementById("user-name");
-    userInfoName.textContent = `Xin chào, ${user.email}`;
-
-    // Hiển thị user info
-    document.getElementById("user-info").style.display = "flex";
-  } else {
-    // User chưa đăng nhập
-    loginContainer.style.display = "flex";
-    mainContent.style.display = "none";
-    headerContent.style.display = "none";
-    document.getElementById("user-info").style.display = "none";
-  }
-
-  // Hiển thị body sau khi đã kiểm tra xong
-  document.body.style.visibility = "visible";
-});
-
-// Xử lý đăng xuất
-logoutBtn.addEventListener("click", async () => {
-  try {
-    await signOut(auth);
-    // Reset form đăng nhập
-    userName.value = "";
-    password.value = "";
-    userNoti.innerHTML = "";
-    passNoti.innerHTML = "";
   } catch (error) {
-    console.error("Lỗi khi đăng xuất:", error.message);
+    console.log("Lỗi", error)
+  } finally {
+    loginButton.disabled = false;
+    loginButton.innerHTML = "Đăng Nhập";
   }
-});
+})
 
-
-
-
+loginBtn.addEventListener("click", () => {
+  signOut(auth)
+    .then(() => {
+      authContainer.style.display = "flex";
+      headerContent.style.display = "none";
+      mainContent.style.display = "none";
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+})

@@ -46,6 +46,9 @@ h5 {
 }
 
 * {
+  user-select: none;
+  -webkit-user-select: none;
+  /* Safari */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -105,6 +108,21 @@ i {
   height: 5%;
 }
 
+#user-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+#logout-btn {
+  border: 1px solid var(--btn-login);
+  border-radius: 5px;
+  outline: none;
+  padding: 10px 15px;
+  background-color: var(--btn-login);
+  color: var(--text-btn);
+  cursor: pointer;
+}
+
 .logo i {
   font-size: 24px;
 }
@@ -140,7 +158,7 @@ i {
 }
 
 body {
-  visibility: hidden;
+  /* visibility: hidden; */
   /* Ẩn toàn bộ UI lúc đầu */
 }
 
@@ -302,35 +320,68 @@ header {
   display: none;
 }
 
-#login-container {
+#auth-container {
+  position: relative;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.login-card {
-  text-align: center;
+.auth-card {
   padding: 4rem;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  min-width: 400px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-#userForm,
-#passForm {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-
+#login-form,
+#register-form {
+  display: block;
 }
 
-#passForm {
+
+.auth-title {
+  font-size: 20px;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.error-message {
+  margin-top: 0.5rem;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--btn-error);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+}
+
+.form-group input {
+  outline: none;
+  border: 1px solid var(--primary-border);
+  width: 100%;
+  padding: 10px 15px;
+}
+
+.form-group input:focus {
+  border-color: var(--btn-success);
+}
+
+.form-group .password-field {
   position: relative;
 }
 
-#passForm #showPass {
+#register-confirm-toggle,
+#login-password-toggle,
+#register-password-toggle {
   position: absolute;
   top: 8px;
   right: -41px;
@@ -338,73 +389,39 @@ header {
   cursor: pointer;
 }
 
-#userForm label,
-#passForm label {
-  display: inline-block;
-  font-size: 13px;
-}
-
-.login-card input {
-  padding: 10px 15px;
-  border-radius: 5px;
+.auth-button {
+  width: 100%;
+  outline: none;
+  background-color: var(--btn-login);
+  color: var(--text-btn);
   border: 1px solid var(--btn-login);
-  margin-left: 10px;
-}
+  padding: 10px 20px;
 
-
-.login-card input:focus {
-  outline: none;
-  border-color: var(--btn-success);
-}
-
-.login-card h4 {
-  margin-bottom: 10px;
-}
-
-#user-noti,
-#pass-noti {
-  font-size: 12px;
-  color: var(--btn-error);
-  margin-left: 18px;
-  margin-bottom: 5px;
-}
-
-#login-btn {
-  background-color: var(--btn-login);
-  color: var(--text-btn);
-  padding: 10px 18px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 1rem;
-}
-
-#login-btn i {
-  vertical-align: middle;
-  margin-right: 8px;
-}
-
-#logout-btn {
-  padding: 10px 15px;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  color: var(--text-btn);
-  background-color: var(--btn-login);
+  margin-bottom: 1rem;
 
   cursor: pointer;
 }
 
-#user-info {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem;
-  margin-bottom: 10px;
+.switch-auth {
+  font-size: 14px;
 }
 
+.switch-auth span {
+  color: var(--btn-login);
+  text-decoration: underline;
+
+  cursor: pointer;
+}
+
+/* aleart */
+#alert {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
 
 /* responsive */
 @media (max-width: 575.98px) {
